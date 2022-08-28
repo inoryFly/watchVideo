@@ -40,8 +40,58 @@ class Ksjs {
     tenAdd=()=>{
         const target=text('领福利').drawingOrder(0).findOne(300)
         if(target){
-            const bound = target.bounds
+            const bound = target.bounds()
             click(bound.centerX(), bound.centerY())
+            this.isAdd=true
+        }
+    }
+
+    /**
+     * 咱看一个广告
+     */
+    seeagain=()=>{
+        const target=id('com.kuaishou.nebula.neo_video:id/again_dialog_ensure_text').drawingOrder(3).findOne(300)
+        if(target){
+            const bounds=target.bounds()
+            click(bounds.centerX(),bounds.centerY())
+        }
+    }
+
+    /**
+     * 开宝箱得金币
+     */
+    openTreasure=()=>{
+        const result = utils.findImage('ksjs/treasure.jpg', {
+            threshold: 0.7,
+            // region: [0, 50],
+        })
+        if (result) {
+            click(result.x, result.y)
+        }
+    }
+
+    /**
+     * 看视频最高得
+     */
+    toAdd=()=>{
+        const target=text('看视频最高得').drawingOrder(0).findOne(300)
+        if(target){
+            const bound = target.bounds()
+            click(bound.centerX(), bound.centerY())
+            this.isAdd=true
+        }
+    }
+
+     /**
+     * 放弃奖励
+     */
+    giveUpWard=()=>{
+        const result = utils.findImage('ksjs/giveUp.jpg', {
+            threshold: 0.7,
+            // region: [0, 50],
+        })
+        if (result) {
+            click(result.x, result.y)
         }
     }
 
@@ -58,16 +108,24 @@ class Ksjs {
         }
     }
 
+   
+
     /**
      * 广告
      * 关闭
      */
     closeAdd=()=>{
-        const target=id('com.kuaishou.nebula.neo_video:id/video_countdown_end_icon').drawingOrder(3).findOne(300)
-        console.log(target)
-        if(target){
-            const bounds=target.bounds()
-            click(bounds.centerX(),bounds.centerY())
+        while(this.isAdd){
+            sleep(7*1000)
+            const target=id('com.kuaishou.nebula.neo_video:id/video_countdown_end_icon').drawingOrder(3).findOne(300)
+            if(target){
+                const bounds=target.bounds()
+                click(bounds.centerX(),bounds.centerY())
+                sleep(1000)
+                this.seeagain()
+                this.giveUpWard()
+                this.isAdd=false
+            }
         }
     }
 
@@ -76,7 +134,13 @@ class Ksjs {
         // this.younModel()
         // this.double()
         // this.getAnother()
-        this.closeAdd()
+        if(!this.isAdd){
+            this.tenAdd()
+        }else{
+            this.closeAdd()
+        }
+        // this.seeagain()
+        // this.toAdd()
     }
 }
 
